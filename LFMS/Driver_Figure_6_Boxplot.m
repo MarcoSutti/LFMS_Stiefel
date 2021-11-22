@@ -1,7 +1,7 @@
 %==========================================================================
 % Generates Figure 6 in the leapfrog paper (Figure 3.6 in my PhD thesis).
 % For post-processing Q_rate_matrix.
-% To generate the data, run 'Driver_Leapfrog_random_starts_2020.m'.
+% To generate the data, run 'Driver_Leapfrog_random_starts.m'.
 % Created:     21.10.2020
 % Last change: 12.11.2021
 
@@ -123,8 +123,7 @@ fileName = ['Plots/Boxplot_LF_n', num2str(n), '_p', num2str(p), ...
 saveas( gcf, fileName, 'epsc' )
 fprintf('-------------------------------------------------------------------------\n');
 fprintf('Saved graph to file %s.eps.\n', fileName);
-fprintf('-------------------------------------------------------------------------');
-% export_fig Plots/Boxplot_Leapfrog_m_10_100.pdf -pdf -cmyk -transparent;
+fprintf('-------------------------------------------------------------------------\n');
 
 worst_of_the_best_Q_rate = max(Q_rate_1_matrix)
 worst_of_the_worst_Q_rate = max(worst_Q_rate_matrix)
@@ -150,4 +149,9 @@ drawnow;
 myMarkerLineWidth = 0.5;
 handle_array.MarkerHandle.LineWidth = myMarkerLineWidth;
 
-export_fig Plots/Convg_Qrate_vs_m.pdf -pdf -cmyk -transparent;
+fileName = 'Plots/Convg_Qrate_vs_m';
+
+saveas( gcf, fileName, 'epsc' )
+fprintf('-------------------------------------------------------------------------\n');
+fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('-------------------------------------------------------------------------\n');

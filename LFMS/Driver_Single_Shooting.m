@@ -15,8 +15,10 @@
 %  |_   _|        |_          _| |_  _|
    
 % Created:     20.07.2016
-% Last change: 12.11.2021
+% Last change: 22.11.2021
 
+%   Nov 22, 2021:
+%       Cleanup of comments and other old lines of code.
 %   Nov 12, 2021:
 %       Added startup file.
 %==========================================================================
@@ -71,8 +73,16 @@ end
 %--------------------------------------------------------------------------
 % Postprocessing of Single Shooting
 %--------------------------------------------------------------------------
+% Convergence plot of single shooting:
+PlotConvergenceSingleShooting( norm_update );
+
+fileName = [ 'Plots/Convg_ss_', num2str(n), '_', num2str(p) ];
+saveas( gcf, fileName, 'epsc' )
+
+fprintf('--------------------------------------------------------\n');
+fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('--------------------------------------------------------\n');
+%--------------------------------------------------------------------------
+
 % All the checks:
 SimpleShootingStiefelChecks( Delta_rec, FDelta, Y0, Y1, Delta_exact, param.tolSS )
-
-PlotConvergenceSingleShooting( norm_update )        
-export_fig Plots/Convg_ss_15_4.pdf -pdf -cmyk -transparent;

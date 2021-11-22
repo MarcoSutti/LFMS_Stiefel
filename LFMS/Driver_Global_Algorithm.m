@@ -2,10 +2,11 @@
 % Generates Figures 4.9 and 4.10 in the thesis.
 % Driver for Multiple Shooting which uses an initial guess provided by the
 % leapfrog algorithm described by Noakes, 1998.
-% References: 
 % Created:     31.10.2016
-% Last change: 12.11.2021
+% Last change: 22.11.2021
 
+%   Nov 22, 2021:
+%       Cleanup of comments and other old lines of code.
 %   Nov 12, 2021:
 %       Added startup file.
 %   Nov 18, 2020:
@@ -121,119 +122,43 @@ while param.flag==false
     
 end
 
-%%
 % 01.07.2020: Concatenate with length at 0th iteration
 norm_F_LF = [ norm_F_0, norm_F_LF ];
 norm_error_L_omega = [ norm_error_L_omega_0, norm_error_L_omega ];
 
 % Convergence plot of leapfrog:
 PlotConvergenceLeapfrog( norm_F_LF, norm_error_L_omega );
-% export_fig Plots/Convg_lf_12_3.pdf -pdf -cmyk -transparent;
+
 %--------------------------------------------------------------------------
-% MS, 18.11.2020:
-% Save plot to png file nella cartella Tesi_Marco
-% fileName = [ '../../../Dropbox/0_UNIGE/Tesi_Marco/images/simulations/Convg_lf_', num2str(n), '_', num2str(p) ];
 fileName = [ 'Plots/Convg_lf_', num2str(n), '_', num2str(p) ];
-export_fig(fileName, '-pdf', '-cmyk', '-transparent');
-fprintf('Saved graph to file %s.pdf.\n', fileName);
+saveas( gcf, fileName, 'epsc' )
+
+fprintf('--------------------------------------------------------\n');
+fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('--------------------------------------------------------\n');
 %--------------------------------------------------------------------------
-
-% %--------------------------------------------------------------------------
-% % Save the plot to file
-% fileName = 'Leapfrog_Plots/Convg_lf_12_3';
-% pause(0.5)
-% saveas( gcf, fileName, 'epsc' );
-% fprintf('+-------------------------------------------------+\n');
-% fprintf('Saved graph to file %s.eps.\n', fileName);
-
 
 % Do Multiple Shooting using the Sigma's obtained with the leapfrog algorithm
 Sigma_MS_0 = Sigma_LF_k;
 
-
-% % 24.05.2017: do the alternative shooting with the broken geodesic
-% [ iterBGS, F_BGS, norm_F_BGS, norm_update, Sigma_BGS, Delta_rec_baby_BGS, param ] = BrokenGeodesicShooting( N, p, m, Sigma_MS_0, Y1_tilde, param );
-%
-% % We reconstruct the tangent vector at Y0 to St(n,p) from this Delta_rec_baby
-% A_tilde = Y0_tilde' * Delta_rec_baby_BGS;
-% B_tilde = Y0perp_tilde' * Delta_rec_baby_BGS;
-% Delta_rec_BGS = Y0*A_tilde + U1*B_tilde;
-%
-% % Convergence plot of broken geodesic shooting:
-% %PlotConvergenceBGS( iterBGS, norm_F_BGS, norm_update, distY0Y1, n, p, m );
-
-%% Do multiple shooting on the baby problem
+% Do multiple shooting on the baby problem
 [ iterMS, F_MS, norm_F_MS, err_L, Sigma_MS, Delta_rec_MS, param ] = MultipleShootingStiefel_SVD_condensing( N, p, m, Sigma_MS_0, X, Y, param );
-
-% % We reconstruct the tangent vector at Y0 to St(n,p) from this Delta_rec_baby
-% A_tilde = X_tilde' * Delta_rec_baby_MS;
-% B_tilde = Y0perp_tilde' * Delta_rec_baby_MS;
-% Delta_rec_MS = X*A_tilde + U1*B_tilde;
 
 %--------------------------------------------------------------------------
 % Postprocessing of Multiple Shooting
 %--------------------------------------------------------------------------
 % Convergence plot of multiple shooting:
 PlotConvergenceMS( norm_F_MS, err_L );
-% MS, 18.11.2020:
-% Save plot to png file nella cartella Tesi_Marco
-% fileName = [ '../../../Dropbox/0_UNIGE/Tesi_Marco/images/simulations/Convg_ms_', num2str(n), '_', num2str(p) ];
+
 fileName = [ 'Plots/Convg_ms_', num2str(n), '_', num2str(p) ];
-export_fig(fileName, '-pdf', '-cmyk', '-transparent');
-fprintf('Saved graph to file %s.pdf.\n', fileName);
+saveas( gcf, fileName, 'epsc' )
+
+fprintf('--------------------------------------------------------\n');
+fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('--------------------------------------------------------\n');
 %--------------------------------------------------------------------------
 % All the checks:
 MultipleShootingStiefelChecks( N, p, m, Sigma_MS, F_MS, X, Y, param.tolSS )
 %--------------------------------------------------------------------------
 
-
-% %--------------------------------------------------------------------------
-% % Save the plot to file
-% fileName = 'Leapfrog_Plots/Convg_ms_12_3';
-% pause(0.5)
-% saveas( gcf, fileName, 'epsc' );
-% fprintf('+-------------------------------------------------+\n');
-% fprintf('Saved graph to file %s.eps.\n', fileName);
-
-
-%CheckTangentVector( n, p, X, Y, Delta_exact, Delta_rec_BGS, param.tolSS )
 CheckTangentVector( n, p, X, Y, Delta_exact, Delta_rec_MS, param.tolSS )
-
-
-% --------------------------------------------------------------------------
-% % 10.05.2017: plot of norm_F also with intermediate iterations:
-% figure(1)
-% % semilogy( 1:length(norm_F_LF), norm_F_LF, 'ko-' )
-% % semilogy( 1:length(norm_F_LF_RB), norm_F_LF_RB, 'rd-' )
-% semilogy( 1:length(norm_error_L_omega), norm_error_L_omega, 'bo-' )
-% hold on
-% %semilogy( 1:length(norm_error_L_omega_RB), norm_error_L_omega_RB, 'rd-' )
-% xlabel( 'inner iterations', 'interpreter', 'latex', 'FontSize', 16 )
-% ylabel( '$| L(\omega_{a}) - L^{*} |$', 'interpreter', 'latex', 'FontSize', 16 )
-% str = sprintf( 'Leap-Frog on St(%d,%d)', n, p );
-% title( str, 'interpreter','latex', 'FontSize', 16 )
-%
-% dim = [ 0.5, 0, 0, 0.3 ];
-% str = sprintf( 'dist($Y_{0},Y_{1}$)= %0.2f $pi$\n $m = %d$', distY0Y1/pi, m );
-% annotation( 'textbox', 'Position', dim, 'String', str, 'FitBoxToText', 'on', ...
-%             'BackgroundColor', 'white', ...
-%             'interpreter', 'latex', 'FontSize', 16 )
-% %--------------------------------------------------------------------------
-% %--------------------------------------------------------------------------
-% figure(2)
-% semilogy( 1:length(norm_F_LF), norm_F_LF, 'bo-' )
-% hold on
-% %semilogy( 1:length(norm_F_LF_RB), norm_F_LF_RB, 'rd-' )
-% xlabel( 'inner iterations', 'interpreter', 'latex', 'FontSize', 16 )
-% ylabel( '$\| F(\Sigma) \|_{2}$', 'interpreter', 'latex', 'FontSize', 16 )
-% str = sprintf( 'Leap-Frog on St(%d,%d)', n, p );
-% title( str, 'interpreter','latex', 'FontSize', 16 )
-%
-% dim = [ 0.5, 0, 0, 0.3 ];
-% str = sprintf( 'dist($Y_{0},Y_{1}$)= %0.2f $pi$\n $m = %d$', distY0Y1/pi, m );
-% annotation( 'textbox', 'Position', dim, 'String', str, 'FitBoxToText', 'on', ...
-%             'BackgroundColor', 'white', ...
-%             'interpreter', 'latex', 'FontSize', 16 )
-% %--------------------------------------------------------------------------
-%sum(param.time_inverting_J)
-%sum(param.time_condensing)

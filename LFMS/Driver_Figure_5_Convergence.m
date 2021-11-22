@@ -157,4 +157,9 @@ for i=1:4
     entryMarker.LineWidth = myMarkerLineWidth;
 end
 
-export_fig Plots/Convg_LF_12_3_m10_100_maxiter_300.pdf -pdf -cmyk -transparent;
+fileName = 'Plots/Convg_LF_12_3_m10_100_maxiter_300';
+
+saveas( gcf, fileName, 'epsc' )
+fprintf('-------------------------------------------------------------------------\n');
+fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('-------------------------------------------------------------------------\n');

@@ -3,8 +3,10 @@
 % Driver for Multiple Shooting on the Stiefel manifold.
 % References: 
 % Created:     31.10.2016
-% Last change: 12.11.2021
+% Last change: 22.11.2021
 
+%   Nov 22, 2021:
+%       Cleanup of comments and other old lines of code.
 %   Nov 12, 2021:
 %       Added startup file.
 %   Nov 18, 2020:
@@ -67,21 +69,22 @@ A_tilde = X_tilde' * Delta_rec_baby_MS;
 B_tilde = Y0perp_tilde' * Delta_rec_baby_MS;
 Delta_rec_MS = X*A_tilde + U1*B_tilde;
 
-% Convergence plot of multiple shooting:
-PlotConvergenceMS( norm_F_MS, err_L );
-
 %--------------------------------------------------------------------------
 % Postprocessing of Multiple Shooting
 %--------------------------------------------------------------------------
+% Convergence plot of multiple shooting:
+PlotConvergenceMS( norm_F_MS, err_L );
+
+fileName = [ 'Plots/Convg_ms_', num2str(n), '_', num2str(p) ];
+saveas( gcf, fileName, 'epsc' )
+
+fprintf('--------------------------------------------------------\n');
+fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('--------------------------------------------------------\n');
+%--------------------------------------------------------------------------
+
 % All the checks:
 MultipleShootingStiefelChecks( 2*p, p, m, Sigma_MS, F_MS, X_tilde, Y_tilde, param.tolSS )
-%--------------------------------------------------------------------------
-% MS, 18.11.2020:
-% Save plot to png file nella cartella Tesi_Marco
-% fileName = [ '../../../Dropbox/0_UNIGE/Tesi_Marco/images/simulations/Convg_ms_', num2str(n), '_', num2str(p) ];
-fileName = [ 'Plots/Convg_ms_', num2str(n), '_', num2str(p) ];
-export_fig(fileName, '-pdf', '-cmyk', '-transparent');
-fprintf('Saved graph to file %s.pdf.\n', fileName);
 %--------------------------------------------------------------------------
 
 CheckTangentVector( n, p, X, Y, Delta_exact, Delta_rec_MS, param.tolSS )
