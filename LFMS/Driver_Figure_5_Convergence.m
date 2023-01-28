@@ -34,7 +34,7 @@ X = eye( n, p );
 %X = orth( rand( s, n, p ) );
 
 % Create a random tangent vector Delta in T_{Y0}St(n,p)
-distXY = 0.95*pi;
+distXY = 0.96*pi;
 Delta_exact = distXY * GetDelta( n, p, X, s );
 
 Exact_Length = distXY;

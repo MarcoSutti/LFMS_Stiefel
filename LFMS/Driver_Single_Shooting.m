@@ -30,8 +30,8 @@ LFMS_startup;
 % Data
 %--------------------------------------------------------------------------
 % Set dimensions of St(n,p)
-n = 15;
-p = 4;
+n = 12;
+p = 3;
 
 % Fix stream of random numbers for reproducibility
 s = RandStream( 'mt19937ar', 'Seed', 1 );
@@ -44,7 +44,7 @@ Y0 = eye( n, p );
 Y0perp = null(Y0');    % The columns of Y0perp span the orthogonal complement to the subspace span(Y0)
 
 % Create a random tangent vector Delta in T_{Y0}St(n,p)
-distY0Y1 = 0.75*pi;
+distY0Y1 = 0.96*pi;
 Delta_exact = distY0Y1 * GetDelta( n, p, Y0, s );
 
 %load( 'Y0_and_Delta_20_09.mat' );
