@@ -10,6 +10,7 @@ If there are any problems or bugs, feel free to [contact me](mailto:msutti@ncts.
 
 ## I) Version History
 
+- 28 January 2023: updated README file.
 - Ver 1, 12 November 2021: initial release.
 
 
