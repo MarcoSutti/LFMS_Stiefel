@@ -15,8 +15,12 @@
 %  |_   _|        |_          _| |_  _|
    
 % Created:     20.07.2016
-% Last change: 22.11.2021
+% Last change: 2022.10.07
 
+%   Oct 7, 2022:
+%       Added lines of codes to save a transparent png version of the plot,
+%       in order to generate the plot for the talk in the Taipei Postdoc
+%       Seminar.
 %   Nov 22, 2021:
 %       Cleanup of comments and other old lines of code.
 %   Nov 12, 2021:
@@ -30,8 +34,8 @@ LFMS_startup;
 % Data
 %--------------------------------------------------------------------------
 % Set dimensions of St(n,p)
-n = 12;
-p = 3;
+n = 15;
+p = 4;
 
 % Fix stream of random numbers for reproducibility
 s = RandStream( 'mt19937ar', 'Seed', 1 );
@@ -44,7 +48,7 @@ Y0 = eye( n, p );
 Y0perp = null(Y0');    % The columns of Y0perp span the orthogonal complement to the subspace span(Y0)
 
 % Create a random tangent vector Delta in T_{Y0}St(n,p)
-distY0Y1 = 0.96*pi;
+distY0Y1 = 0.75*pi;
 Delta_exact = distY0Y1 * GetDelta( n, p, Y0, s );
 
 %load( 'Y0_and_Delta_20_09.mat' );
@@ -52,8 +56,8 @@ Delta_exact = distY0Y1 * GetDelta( n, p, Y0, s );
 % Map the tg vector onto the manifold
 [ Y1 ] = Stiefel_Exp( Y0, Delta_exact );
 
-param.tolSS = 1e-13;
-param.maxiterSS = 20;
+param.tolSS = 1e-16;
+param.maxiterSS = 9;
 param.verbose = 1;
 %--------------------------------------------------------------------------
 
@@ -73,16 +77,29 @@ end
 %--------------------------------------------------------------------------
 % Postprocessing of Single Shooting
 %--------------------------------------------------------------------------
-% Convergence plot of single shooting:
-PlotConvergenceSingleShooting( norm_update );
+% All the checks:
+% SimpleShootingStiefelChecks( Delta_rec, FDelta, Y0, Y1, Delta_exact, param.tolSS )
 
-fileName = [ 'Plots/Convg_ss_', num2str(n), '_', num2str(p) ];
-saveas( gcf, fileName, 'epsc' )
+PlotConvergenceSingleShooting( norm_update )        
+% export_fig Plots/Convg_ss_15_4.pdf -pdf -cmyk -transparent;
 
+%--------------------------------------------------------------------------
+% SAVE IMAGE TO PNG FILE
+% MS, added 2022.10.07.
+%--------------------------------------------------------------------------
+fprintf('+--------------------------------------------------------------+\n');
+fprintf('|                           Save plot                          |\n');
+fprintf('+--------------------------------------------------------------+\n');
+% MS, 2022.10.07:
+% Save plot to png file nella cartella 20221012_Talk_Postdoc_Seminar
+% fileName_plot = '../../../../00_NCTS/20221012_Talk_Postdoc_Seminar/plots/Convg_ss_15_4';
+fileName_plot = '../../../../00_Scientific_Research/Shooting_Stiefel_preprint/plots/Convg_ss_15_4';
+export_fig(fileName_plot, '-pdf', '-transparent', '-r300');
+% MS, 2023.03.01:
+% Use option '-dpng' for saving a png image.
+% Use option '-transparent' for transparent background.
+% -r300 is the PPI value, default resolution is low
 fprintf('--------------------------------------------------------\n');
-fprintf('Saved graph to file %s.eps.\n', fileName);
+fprintf('Saved graph to file %s.eps.\n', fileName_plot);
 fprintf('--------------------------------------------------------\n');
 %--------------------------------------------------------------------------
-
-% All the checks:
-SimpleShootingStiefelChecks( Delta_rec, FDelta, Y0, Y1, Delta_exact, param.tolSS )

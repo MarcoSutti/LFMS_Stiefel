@@ -3,8 +3,11 @@
 % Driver for Multiple Shooting on the Stiefel manifold.
 % References: 
 % Created:     31.10.2016
-% Last change: 22.11.2021
+% Created:     2016.10.31
+% Last change: 2023.03.01
 
+%   Mar 1, 2023:
+%       Added save directly into the preprint folder.
 %   Nov 22, 2021:
 %       Cleanup of comments and other old lines of code.
 %   Nov 12, 2021:
@@ -45,8 +48,8 @@ Exact_Length = distXY;
 
 %--------------------------------------------------------------------------
 % Parameters Multiple Shooting
-param.tolSS = 0.5e-14;
-param.maxiterSS = 50;
+param.tolSS = 0.5e-16;
+param.maxiterSS = 11;
 
 param.verbose = 1;
 %--------------------------------------------------------------------------
@@ -75,16 +78,24 @@ Delta_rec_MS = X*A_tilde + U1*B_tilde;
 % Convergence plot of multiple shooting:
 PlotConvergenceMS( norm_F_MS, err_L );
 
-fileName = [ 'Plots/Convg_ms_', num2str(n), '_', num2str(p) ];
-saveas( gcf, fileName, 'epsc' )
-
-fprintf('--------------------------------------------------------\n');
-fprintf('Saved graph to file %s.eps.\n', fileName);
-fprintf('--------------------------------------------------------\n');
-%--------------------------------------------------------------------------
-
 % All the checks:
 MultipleShootingStiefelChecks( 2*p, p, m, Sigma_MS, F_MS, X_tilde, Y_tilde, param.tolSS )
 %--------------------------------------------------------------------------
+% MS, 18.11.2020:
+% Save plot to pdf file in:
+fileName_plot = [ 'Plots/Convg_ms_', num2str(n), '_', num2str(p) ];
+export_fig(fileName_plot, '-pdf', '-cmyk', '-transparent');
+fprintf('--------------------------------------------------------\n');
+fprintf('Saved graph to file %s.pdf.\n', fileName_plot);
+fprintf('--------------------------------------------------------\n');
+%--------------------------------------------------------------------------
+% fileName_plot = '../../../../00_Scientific_Research/Shooting_Stiefel_preprint/plots/Convg_ss_15_4';
+% export_fig(fileName_plot, '-pdf', '-transparent', '-r300');
+% % MS, 2023.03.01:
+% % Use option '-dpng' for saving a png image.
+% % Use option '-transparent' for transparent background.
+% % -r300 is the PPI value, default resolution is low
+% fprintf('Saved graph to file %s.pdf.\n', fileName_plot);
+% %--------------------------------------------------------------------------
 
 CheckTangentVector( n, p, X, Y, Delta_exact, Delta_rec_MS, param.tolSS )

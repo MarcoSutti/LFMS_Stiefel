@@ -14,6 +14,8 @@ function [ iter, L_omega, norm_F, err_L, err_X_k, Sigma_iter, param ] = LeapFrog
 global Exact_Length;
 global Exact_Solution;
 
+err_X_k = [];
+
 if param.verbose==1
     disp('----------------------------------')
     disp('             LEAP-FROG             ')
