@@ -38,3 +38,8 @@ The figures are saved in the `Plots` folder.
 ## IV) License
 
 The code in this repository is GPL licensed.
+
+
+## V) References
+- [1] M. Sutti, "Riemannian Algorithms on the Stiefel and the Fixed-Rank Manifold", Ph.D. thesis, University of Geneva, December 2020.
+- [2] M. Sutti and B. Vandereycken, "The leapfrog algorithm as nonlinear Gauss-Seidel", arXiv preprint, January 2023.
