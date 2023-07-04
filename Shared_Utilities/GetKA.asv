@@ -1,0 +1,107 @@
+function [ KA ] = GetKA( A )
+
+% function [ KA ] = GetKA( A )
+% Purpose: Returns the Kronecker representation of the Fréchet derivative6
+%          of the matrix exponential at A.
+%          From "Functions of Matrices", Higham, p.238, eq. (10.17b).
+%          Originally from "Derivatives of the Matrix Exponential and Their
+%          Computation", 1995, Najfeld and Havel, eq. (109).
+% Created:     01.07.2016
+% Last change: 2023.07.03
+
+%   Jul 3, 2023:
+%       Use explicit formula for the matrix function Sinch(B).
+%       Commented out the function [ Sinch ] = MatSinch( B ).
+
+n = size(A,1);
+In = speye(n);   % 2023.07.02
+
+% B = .5 * ( kron( A', In ) - kron( In, A ) );
+
+% 2023.07.03
+% Use the fact that A = U*Lambda*U^{H}
+[ U, Lambda ] = eig(A);
+
+% norm(A - U*Lambda*U','fro')
+
+% Lambda_sp = sparse(Lambda);
+
+UkronU = kron(U,U);
+
+kron_sum_Lambda = -0.5 * ( kron( Lambda, In ) + kron( In, Lambda ) );
+
+Sinch_kron_sum_Lambda = diag(sinc(imag(diag(kron_sum_Lambda))/pi));
+
+SinchB_maybe_cheaper = UkronU * Sinch_kron_sum_Lambda * UkronU';  % EXPENSIVEW
+
+%lambda_max_A = max(eig(A))
+
+% Sinch = MatSinch( B );
+
+% Check:
+% norm( SinchB_maybe_cheaper - Sinch, 'fro' )
+% pause
+% eig(B)
+% eig(Sinch)
+% eig(A)
+
+% The differential of the matrix exponential in Kronecker representation (10.17b):
+KA = kron( expm(A'/2), expm(A/2) ) * SinchB_maybe_cheaper;
+% I think that this can still be improved for efficiency. Look at the
+% explicit formulas.
+% Maybe I can avoid to do the matrix-matrix products, and just do
+% subsequent matrix-vector products, i.e., first do b = UkronU' * a, then
+% c = Sinch_kron_sum_Lambda * b, etc. This will should be much cheaper than
+% doing the matrix-matrix products... The only issue might be that we need
+% the inverse of this matrix...
+
+
+
+end
+
+% LEGACY CODE:
+% function [ Sinch ] = MatSinch( B )
+% 
+% % function [ Sinch ] = MatSinch( B )
+% % Purpose: Returns the matrix sinch function of B.
+% % Created:     01.07.2016
+% % Last change: 20.01.2017
+% 
+% % We define Sinch as a matrix function Sinch = V*diag(sinh(diag(D))./diag(D))/V;
+% % TODO: A skew-symmetric matrix should be diagonalised through a unitary
+% % matrix. MATLAB eig does not compute this. We should address this issue
+% % sooner or later.
+% 
+% % 2023.07.02: Use sparsity.
+% 
+% [ V, D ] = eig(full(B));  % BOTTLENECK!!!!
+% 
+% % d = imag(diag(D));
+% % 
+% % Lambda = spdiags(sinc(d/pi), 0, length(d), length(d));
+% % 
+% % Sinch = V*Lambda/V;
+% 
+% % [ V, D ] = eig(B);
+% 
+% d = imag(diag(D));
+% 
+% Sinch = V*diag(sinc(d/pi))/V;
+% 
+% 
+% % 30.08.2016:
+% % Determine whether B is diagonalizable. If B is nondiagonalizable, we
+% % have to use another formula.
+% % if rank(V)~= n2
+% %     error('B is not diagonalizable!!!') %... Using alternative formula for Sinch...')
+% %     %Sinch = eye(n2) + B^2/6 + B^4/120 + B^6/5040 + B^8/362880
+% % else
+% %     Sinch  = V*diag(sinh(diag(D))./diag(D))/V;
+% %     norm(inv(V)-V')
+% %     pause
+% % end 
+% 
+% % Sinch must be real, so we forget about imaginary parts:
+% Sinch = real(Sinch);
+% 
+% end

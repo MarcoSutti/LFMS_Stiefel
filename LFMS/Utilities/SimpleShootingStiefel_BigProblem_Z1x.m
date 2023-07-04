@@ -103,6 +103,7 @@ else
         iter = iter + 1;
         
         % The Jacobian
+        % 2023.07.03: Do not compute the full Jacobian, just 
         J_Z1_x = GetJZ1xAnalytic( E, Q, x_k );
         
         % J_Z1_x_plus = pinv(J_Z1_x);   % only for analysis purposes
@@ -117,16 +118,17 @@ else
         % min(svd(J_Z1_x_plus))
         % norm_Prod = norm( J_Z1_x_plus * Fx_k)
         
-        % 18.12.2016: We put a check on the condition number of the Jacobian
-        if cond(J_Z1_x) > 1e9
-            if param.verbose==1
-                disp( 'SINGLE SHOOTING: HUGE CONDITION NUMBER!!!' )
-            end
-            param.flag = false;
-            break;
-        end
+%         % 18.12.2016: We put a check on the condition number of the Jacobian
+%         if cond(J_Z1_x) > 1e9
+%             if param.verbose==1
+%                 disp( 'SINGLE SHOOTING: HUGE CONDITION NUMBER!!!' )
+%             end
+%             param.flag = false;
+%             break;
+%         end
         
         % Solve for update:
+        % 2023.07.03: is it possible to precondition this step?
         dx_k = -J_Z1_x\Fx_k;
         
         %check_pinv = - J_Z1_x_plus*Fx_k - dx_k

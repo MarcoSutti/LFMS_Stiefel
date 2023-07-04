@@ -18,7 +18,7 @@
 % Last change: 2023.07.03
 
 %   Jul 2, 2023:
-%       Use sparsity. Working on efficient implementation.
+%       Use sparsity. 
 %   Oct 7, 2022:
 %       Added lines of codes to save a transparent png version of the plot,
 %       in order to generate the plot for the talk in the Taipei Postdoc
@@ -36,8 +36,8 @@ LFMS_startup;
 % Data
 %--------------------------------------------------------------------------
 % Set dimensions of St(n,p)
-n = 80;
-p = 35;
+n = 60;
+p = 25;
 
 % Fix stream of random numbers for reproducibility
 s = RandStream( 'mt19937ar', 'Seed', 1 );

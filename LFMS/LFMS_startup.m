@@ -9,7 +9,7 @@ set( 0, 'defaultTextInterpreter',          'latex' );
 set( 0, 'defaultAxesFontSize', 14 );
 
 addpath(genpath('../LFMS'));
-% addpath(genpath('../altmany-export_fig'));
+addpath(genpath('../export_fig-master'));
 addpath(genpath('../Shared_Utilities'));
 
 %--------------------------------------------------------------------------

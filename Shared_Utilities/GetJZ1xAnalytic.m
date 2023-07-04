@@ -18,7 +18,7 @@ p = sqrt(size(E,1));
 
 %--------------------------------------------------------------------------
 % Initialize matrices that depend only on n and p
-IpZeros = eye( n, p );
+IpZeros = speye( n, p );   % 2023.07.02
 P = perfect_shuffle( n-p, p );
 % Transformation matrix from blockwise vectorization to ordinary vectorization
 H = GetH( n, p );
@@ -46,24 +46,29 @@ hx = [ Omega,            -D';
 % Get Kronecker representation of the Fréchet derivative of the matrix
 % exponential
 Khx = GetKA( hx );
-sigma_min_K = min(svd(Khx));
+% sigma_min_K = min(svd(Khx));
 
 % 27.09.2020: Check:
 % sigma_min_K - sin(norm(hx,2))/norm(hx,2)
 
-sigma_max_K = max(svd(Khx));
+% sigma_max_K = max(svd(Khx));
 
 % 27.09.2020: Check:
 % sigma_max_K - 1
 
 
 % Build Jacobian of h(x) wrt x
+% sparse
 J_hx = [                        E,        zeros(p^2,p*(n-p));
           zeros(p*(n-p),dimSkewp),              eye(p*(n-p));
           zeros(p*(n-p),dimSkewp),                        -P;
           zeros((n-p)^2,dimSkewp),     zeros((n-p)^2,p*(n-p)) ];
 
+
 % The Jacobian of Z1 wrt x
 J_Z1_x = kron( IpZeros', Q ) * Khx * H * J_hx;
+
+
+size(full(kron( IpZeros, Q' ) * kron( IpZeros', Q )))
 
 end
